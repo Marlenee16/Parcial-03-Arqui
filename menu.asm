@@ -131,13 +131,53 @@ ComparacionTecla:
     je mensajeFinal  ; Si es '3' va al mensajeFinal
     call ComparacionTecla  ; Repetir la  comparación hasta que ingrese uno valido
 
+
+
 triangulo:
-    ; Aquí va el código para mostrar el triángulo
-    ret
+  call modoGrafico
+    MOV AH, 09H
+    MOV DX, msjMenu
+    int 21h
+; Inicializa la columna
+  mov si, 90d         
+  ; Inicializa la fila
+  mov di, 90d         
+  ; Límite
+  mov bp, 90d        
+  mov ah, 0ch        
+  ; Definimos el Color
+  mov al, 2h       
+  mov bh, 0h     
+
+
+  EncenderPixel:
+  mov cx, si        
+  mov dx, di  
+  ; Interrupción de video       
+  int 10h             
+  inc si
+  cmp si, bp
+  jl EncenderPixel    
+  inc di             
+  inc bp              
+  mov si, 90d  
+  ; Verifica si la fila alcanzado su límite      
+  cmp di, 140d       
+  jne EncenderPixel
+  call esperarTeclaS
+
+esperarTeclaS:
+    mov ah, 00h
+    int 16h
+    cmp al, 'S'
+    je main
+    call esperarTeclaS
+                
 
 figura:
     ; Aquí va el código para mostrar la figura
     ret
+
 
 mensajeFinal:
     call modoTxt
