@@ -126,7 +126,7 @@ ComparacionTecla:
     cmp al, '1'  
     je triangulo  ; Si elige '1' ir a la etiqueta triangulo
     cmp al, '2'  
-    je figura  ; Si es '2' ir a la etiqueta figura
+    je dibujarCasa  ; Si es '2' ir a la etiqueta figura
     cmp al, '3'  
     je mensajeFinal  ; Si es '3' va al mensajeFinal
     call ComparacionTecla  ; Repetir la  comparación hasta que ingrese uno valido
@@ -146,7 +146,7 @@ triangulo:
   mov bp, 90d        
   mov ah, 0ch        
   ; Definimos el Color
-  mov al, 2h       
+  mov al, 2     
   mov bh, 0h     
 
 
@@ -174,14 +174,115 @@ esperarTeclaS:
     call esperarTeclaS
                 
 
-figura:
-    ; Aquí va el código para mostrar la figura
-    ret
+dibujarCasa:
+    call modoGrafico
+
+
+    ; Dibuja el techo (triángulo)
+    mov si, 150
+    mov di, 50
+    mov bp, 150
+    
+
+dibujarTechoTriangular:
+    mov ah, 0ch
+    mov al, 2  ; Color verde
+    mov bh, 0h
+    mov cx, si
+    mov dx, di
+    int 10h
+    inc si
+    cmp si, bp
+    jl dibujarTechoTriangular
+    inc di
+    inc bp
+    mov si, 150
+    cmp di, 100
+    jne dibujarTechoTriangular
+
+    ; Dibuja el cuerpo de la casa (rectángulo)
+    mov si, 150
+    mov di, 100
+
+dibujarCuerpoCasa:
+    mov ah, 0ch
+    mov al, 4  ; Color rojo
+    mov bh, 0h
+    mov cx, si
+    mov dx, di
+    int 10h
+    inc si
+    cmp si, 300
+    jne dibujarCuerpoCasa
+    mov si, 150
+    inc di
+    cmp di, 250
+    jne dibujarCuerpoCasa
+
+    ; Dibuja la puerta (rectángulo)
+    mov si, 220
+    mov di, 200
+
+dibujarPuerta:
+    mov ah, 0ch
+    mov al, 0  ; Color negro
+    mov bh, 0h
+    mov cx, si
+    mov dx, di
+    int 10h
+    inc si
+    cmp si, 260
+    jne dibujarPuerta
+    mov si, 220
+    inc di
+    cmp di, 250
+    jne dibujarPuerta
+
+    ; Dibuja la primera ventana (rectángulo)
+    mov si, 170
+    mov di, 120
+
+dibujarVentana1:
+    mov ah, 0ch
+    mov al, 15  ; Color blanco
+    mov bh, 0h
+    mov cx, si
+    mov dx, di
+    int 10h
+    inc si
+    cmp si, 200
+    jne dibujarVentana1
+    mov si, 170
+    inc di
+    cmp di, 150
+    jne dibujarVentana1
+
+    ; Dibuja la segunda ventana (rectángulo)
+    mov si, 250
+    mov di, 120
+
+dibujarVentana2:
+    mov ah, 0ch
+    mov al, 15  ; Color blanco
+    mov bh, 0h
+    mov cx, si
+    mov dx, di
+    int 10h
+    inc si
+    cmp si, 280
+    jne dibujarVentana2
+    mov si, 250
+    inc di
+    cmp di, 150
+    jne dibujarVentana2
+    call esperarTecla
+
+
 
 
 mensajeFinal:
     call modoTxt
-    mov cx, 12       ; Fila para el mensaje final 
+    mov cx, 15       ; Fila donde mostrarara mensaje final 
     mov dx, 40      
     sub dx, 8        
     mov ch, cl       
